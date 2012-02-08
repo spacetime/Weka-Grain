@@ -1,0 +1,404 @@
+//sg
+/*
+    "Copyright 2011 Aman Madaan <madaan.amanmadaan@gmail.com>"
+    
+     This file is part of Weka Grain.
+
+    Weka Grain is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Weka Grain is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Weka Grain.  If not, see <http://www.gnu.org/licenses/>.*/
+
+package com.wekagrain.bvp;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.PrintWriter;
+import java.util.Random;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
+import javax.swing.JSpinner;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import java.awt.Font;
+
+public class MainWindow {
+
+	private JFrame frame;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainWindow window = new MainWindow();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public MainWindow() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(238, 232, 170));
+		frame.setBounds(150, 150, 600, 400);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		final JTextArea txtrSg = new JTextArea();
+		txtrSg.setLineWrap(true);
+		txtrSg.setText(	"sg:int_id;sg2:dept");
+		txtrSg.setBounds(50, 108, 190, 150);
+		frame.getContentPane().add(txtrSg);
+		JLabel lblEnterYourGrain = new JLabel("Enter Your Grain String");
+		lblEnterYourGrain.setBounds(50, 81, 175, 15);
+		frame.getContentPane().add(lblEnterYourGrain);
+		String infoStr="Data Types Available\n1. int_id : Integer ID" +
+				"\n2. dept: Deprartment\n3. yn : yes /no\n4. tf : True / False\n5. gender : Gender\n6. ph : Mobile Phone " +
+				"Number;";
+		JTextPane txtpnSg = new JTextPane();
+		txtpnSg.setEditable(false);
+		txtpnSg.setBackground(SystemColor.info);
+		txtpnSg.setText(infoStr);
+		txtpnSg.setBounds(329, 108, 200, 180);
+		frame.getContentPane().add(txtpnSg);
+		java.net.URL imgURL = getClass().getResource("grain.png");
+		ImageIcon ic=new ImageIcon(imgURL,"LOTS OF GRAIN!");
+		
+		JLabel lblWekaGrainfoodFor = new JLabel("WEKA GRAIN:FOOD FOR WEKA",ic,JLabel.CENTER);
+		lblWekaGrainfoodFor.setForeground(new Color(105, 105, 105));
+		lblWekaGrainfoodFor.setFont(new Font("PakType Tehreer", Font.BOLD, 14));
+		lblWekaGrainfoodFor.setBounds(128, 12, 340, 40);
+		frame.getContentPane().add(lblWekaGrainfoodFor);
+		
+		final JSpinner spinner = new JSpinner();
+		spinner.setBounds(198, 270, 42, 20);
+		spinner.setValue((Integer)3);
+		frame.getContentPane().add(spinner);
+		
+		JLabel lblSelectNumberOf = new JLabel("How many records?");
+		lblSelectNumberOf.setBounds(50, 273, 167, 15);
+		frame.getContentPane().add(lblSelectNumberOf);
+		JButton btnGetCsv = new JButton("  Get CSV");
+		btnGetCsv.setBounds(261, 303, 117, 25);
+		frame.getContentPane().add(btnGetCsv);
+		
+		JSeparator separator = new JSeparator();
+		separator.setBounds(291, 63, -11, 145);
+		frame.getContentPane().add(separator);
+		
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		JMenu mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		JMenuItem mntmAboutWekaGrain = new JMenuItem("About Weka Grain");
+		mnFile.add(mntmAboutWekaGrain);
+		
+		JMenuItem mntmExit = new JMenuItem("Exit");
+		mntmExit.addActionListener(new ActionListener(){
+			
+			public void actionPerformed(ActionEvent ae)
+			{
+				System.exit(0);
+			}
+		});
+		
+		mnFile.add(mntmExit);
+		
+		JMenu mnHelp = new JMenu("Help");
+		menuBar.add(mnHelp);
+		
+		JMenuItem mntmWritingTheGrain = new JMenuItem("Writing the grain string");
+		mnHelp.add(mntmWritingTheGrain);
+		mntmWritingTheGrain.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae)
+			{
+				
+			}
+		});
+		btnGetCsv.addActionListener(new ActionListener()
+		{
+		public void actionPerformed(ActionEvent ae)
+		{
+			String grain=txtrSg.getText();
+			int numRec=(Integer)spinner.getValue();
+			new GrainStringParser(grain,numRec);
+		}
+		});
+		
+	}
+}
+
+class GrainStringParser
+{
+private String grain;
+private Integer numberOfAttributes,numberOfRecords;
+private String attributeList[];
+private int randomInfo[];
+private static final int  ID=1,DEPT=2,YES_NO=3,TRUE_FALSE=4,GENDER=5,PHONE=6;
+GrainStringParser(String grain,int numberOfRecords)
+{
+
+	this.numberOfRecords=numberOfRecords;
+	this.grain=grain;
+	initData();
+	CSVWriter();
+}
+private void initData()
+{
+	int i=0;
+	String attribs[]= grain.split(";");
+	this.numberOfAttributes=attribs.length;
+	attributeList=new String[this.numberOfAttributes];
+	randomInfo=new int[this.numberOfAttributes]; 
+	for(String attrib:attribs)
+	{
+		String nameType[]=attrib.split(":");
+		attributeList[i]=nameType[0];
+		if(nameType[1].equalsIgnoreCase("int_id"))
+		{
+			randomInfo[i]=ID;
+		}
+		else if(nameType[1].equalsIgnoreCase("dept"))
+		{
+			randomInfo[i]=DEPT;
+		}
+		else if(nameType[1].equalsIgnoreCase("yn"))
+		{
+			randomInfo[i]=YES_NO;
+		}
+		else if(nameType[1].equalsIgnoreCase("tf"))
+		{
+			randomInfo[i]=TRUE_FALSE;
+		}
+		else if(nameType[1].equalsIgnoreCase("gender"))
+		{
+			randomInfo[i]=GENDER;
+		}
+		else if(nameType[1].equalsIgnoreCase("ph"))
+		{
+			randomInfo[i]=PHONE;
+		}
+		System.out.println(this.attributeList[i]);
+		i++;	
+	
+	}
+}
+private void CSVWriter()
+{
+	System.out.println("WRITING "+this.numberOfRecords.toString()+" RECORDS WITH "+this.numberOfAttributes +"ATTRIBUTES");
+	try{
+		PrintWriter pw=new PrintWriter("/home/aman/sg1.csv");
+		for(int i=0;i<this.numberOfAttributes;i++)
+		{
+			if(i==this.numberOfAttributes-1){
+			pw.write(this.attributeList[i]+"\n");
+		}
+			else
+			{
+				pw.write(this.attributeList[i]+",");
+			}
+		}
+		String attribVal=null;
+		for(int i=0;i<this.numberOfRecords;i++)  //for each row
+		{
+			for(int j=0;j<this.numberOfAttributes;j++) //for each record
+			{
+				switch(randomInfo[j])
+				{
+				case ID:
+					Integer id=i+1;
+					attribVal=id.toString();
+					break;
+				case DEPT:
+					attribVal=getRandomDept();
+					break;
+				case YES_NO:
+					attribVal=getYesNo();
+					break;
+				case TRUE_FALSE:
+					attribVal=getTrueFalse();
+					break;
+
+				case GENDER:
+					attribVal=getGender();
+					break;
+
+				case PHONE:
+					attribVal=getRandomPhone();
+					break;
+				}  //got the value for attribute,now write it 
+		
+				if(j==(this.numberOfAttributes-1))
+				{
+					pw.write(attribVal+"\n");
+					//System.out.println(attribVal);
+				}
+				else
+				{
+					pw.write(attribVal+",");
+					//System.out.print(attribVal+",");
+						
+				}
+				
+			}
+		}
+		pw.flush();
+		pw.close();
+	}
+	catch(Exception e)
+	{
+		e.printStackTrace();
+	}
+}
+private String getRandomDept()
+{
+	String dept[]={"CSE","IT","EEE","ECE","ICE"};
+	Random r=new Random();
+	int d=(r.nextInt(10000))%5;
+	
+	
+	return dept[d];
+}
+private String getYesNo()
+{
+	String yn[]={"Yes","No"};
+	Random r=new Random();
+	int d=(r.nextInt(10000))%2;
+	return yn[d];
+}
+private String getTrueFalse()
+{
+	String yn[]={"True","False"};
+	Random r=new Random();
+	int d=(r.nextInt(10000))%2;
+	return yn[d];
+}
+private String getGender()
+{
+	String yn[]={"Male","Female"};
+	Random r=new Random();
+	int d=(r.nextInt(10000))%2;
+	return yn[d];
+}
+
+//TODO: GET RANDOM NAMES
+private String getRandomName()
+{
+String surnames[]={"Acharya",
+"Adiga",
+"Agarwal",
+"Ahluwalia",
+"Ahuja",
+"Arora",
+"Bandopadhyay",
+"Banerjee",
+"Bharadwaj",
+"Bhat",
+"Bhattacharya",
+"Chaturvedi",
+"Chattopadhyay",
+"Chopra",
+"Desai",
+"Deshpande",
+"Devar",
+"Dhawan",
+"Dubashi",
+"Dutta",
+"Dwivedi",
+"Gandhi",
+"Gill",
+"Gowda",
+"Guha",
+"Guneta",
+"Gupta",
+"Iyer",
+"Iyengar",
+"Jain",
+"Jha",
+"Johar",
+"Joshi",
+"Kakkar",
+"Kapoor",
+"Kaul",
+"Kaur",
+"Khan",
+"Khanna",
+"Khatri",
+"Kocchar",
+"Mahajan",
+"Malik",
+"Menon",
+"Mehra",
+"Mishra",
+"Mukhopadhyay",
+"Nair,",
+"Nehru",
+"Pandey",
+"Patel",
+"Pilla",
+"Prajapati",
+"Rana",
+"Reddy",
+"Saini",
+"Sethi",
+"Shah",
+"Sharma",
+"Shukla",
+"Singh",
+"Sinha",
+"Tagore",
+"Talwar",
+"Tandon",
+"Trivedi",
+"Varrier",
+"Varma",
+"Verma",}
+	return null;
+	
+}
+//TODO: GET RANDOM Phones
+private String getRandomPhone()
+{
+	long starting[]={8800000000l,9800000000l};
+	Random r=new Random();
+	long remaining=r.nextLong()%10000000;
+	int index=r.nextInt(1000)%2;
+	Long nu=starting[index]+remaining;
+	return nu.toString();
+}
+}
