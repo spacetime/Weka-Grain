@@ -26,8 +26,11 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,14 +42,13 @@ import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 
 public class MainWindow {
 
 	private JFrame frame;
 	 JFileChooser fc;
 	 ImageIcon ic;
+	 private String helpFileName;
 	/**
 	 * Launch the application.
 	 */
@@ -74,6 +76,7 @@ public class MainWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		helpFileName="/home/aman/weka/help.htm";
 		 fc = new JFileChooser();
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(238, 232, 170));
@@ -172,6 +175,15 @@ public class MainWindow {
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 		
+		JMenuItem mntmSampleGrainStrings = new JMenuItem("Sample Grain Strings");
+		mnHelp.add(mntmSampleGrainStrings);
+		mntmSampleGrainStrings.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae)
+			{
+				
+			openBrowserWindow();
+			}
+		});
 		JMenuItem mntmWritingTheGrain = new JMenuItem("Writing the grain string");
 		mnHelp.add(mntmWritingTheGrain);
 		mntmWritingTheGrain.addActionListener(new ActionListener(){
@@ -204,5 +216,33 @@ public class MainWindow {
 		});
 		
 	}
+	 public  void openBrowserWindow() {
+
+	        if( !java.awt.Desktop.isDesktopSupported() ) {
+
+	            System.err.println( "Desktop is not supported (fatal)" );
+	            System.exit( 1 );
+	        }
+
+	
+	        java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+
+	        if( !desktop.isSupported( java.awt.Desktop.Action.BROWSE ) ) {
+
+	            System.err.println( "Desktop doesn't support the browse action (fatal)" );
+	            System.exit( 1 );
+	        }
+	        	try {
+
+	                java.net.URI uri = new java.net.URI(helpFileName);
+	                desktop.browse( uri );
+	            }
+	            catch ( Exception e ) {
+
+	                System.err.println( e.getMessage() );
+	            }
+	        
+	    }
+
 }
 
