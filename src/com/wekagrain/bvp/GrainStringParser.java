@@ -159,7 +159,7 @@ public class GrainStringParser {
 					type="string";
 					break;
 				case COMPLANG:
-					type="{\"C\",\"C++\",\"C#\",\"Java\",\"Python\",\"php\",\"asm\",\"VHDL\",\"Shell\",\"JavaScript\",\"ASP\"}";
+					type="{\"C\",\"C++\",\"C#\",\"Java\",\"Python\",\"php\",\"asm\",\"VHDL\",\"Shell\",\"JavaScript\",\"ASP\",\"Lua\"}";
 					name="ComputerLanguage_"+i.toString();
 					break;
 				case GROCERY:

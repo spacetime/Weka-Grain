@@ -62,7 +62,7 @@ public class RandomDataProvider {
 	}
 	public String getRandomComputerLanguage()
 	{
-		String lang[]={"C","C++","C#","Java","Python","php","asm","VHDL","Shell","JavaScript","ASP"};
+		String lang[]={"C","C++","C#","Java","Python","php","asm","VHDL","Shell","JavaScript","ASP","Lua"};
 		Random r=new Random();
 		int index=(r.nextInt(10000))%lang.length;
 		return lang[index];
